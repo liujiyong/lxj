@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lxj.mapper.ResourcesAuthorizedMapper">
+    <resultMap id="ResourcesAuthResultMap" type="com.lxj.model.ResourcesAuth">
+        <id column="id" property="id" javaType="String" jdbcType="VARCHAR" />
+        <result column="resource" property="title" javaType="String" jdbcType="VARCHAR" />
+        <result column="authorized" property="authorized" javaType="String" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" javaType="String" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" javaType="String" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="ResourcesAuth_Column_List">
+        id,
+        resource,
+        authorized,
+        create_user,
+        create_time,
+        update_user,
+        update_time
+    </sql>
+
+    <resultMap id="authMap"  type="HashMap">  
+        <result property="key" column="resource" javaType="java.lang.String"/>  
+        <result property="value" column="authorized" javaType="java.lang.String" />  
+    </resultMap>
+
+    <select id="getAllResourcesAuth" resultMap="authMap">
+        select
+            resource, authorized
+        from t_resources_auth
+    </select>
+
+</mapper>

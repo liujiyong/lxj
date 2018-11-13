@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lxj.mapper.NewsMapper">
+    <resultMap id="NewsResultMap" type="com.lxj.model.News">
+        <id column="id" property="id" javaType="String" jdbcType="VARCHAR" />
+        <result column="title" property="title" javaType="String" jdbcType="VARCHAR" />
+        <result column="content" property="content" javaType="String" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" javaType="String" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" javaType="String" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="News_Column_List">
+        id,
+        title,
+        content,
+        create_user,
+        create_time,
+        update_user,
+        update_time
+    </sql>
+
+    <select id="getAllNews" resultMap="NewsResultMap">
+        select
+        <include refid="News_Column_List" />
+        from t_news
+    </select>
+
+</mapper>
