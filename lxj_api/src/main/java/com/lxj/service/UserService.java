@@ -1,19 +1,21 @@
 package com.lxj.service;
 
-import com.lxj.BasicResponse;
+import java.util.List;
+
 import com.lxj.model.User;
+import com.lxj.response.BasicResponse;
 
 public interface UserService {
 
-    public BasicResponse validateUser(String userId, String password);
+    public BasicResponse<String> validateAppUser(String userId, String password);
 
-    public BasicResponse getUserList();
+    public BasicResponse<List<User>> getUserList();
 
-    public BasicResponse deleteUserById(String userId);
+    public BasicResponse<String> deleteUserByUserId(String userId);
 
-    public BasicResponse updateUser(User user);
+    public BasicResponse<String> updateUser(User user);
 
-    public BasicResponse addUser(User user);
+    public BasicResponse<String> addUser(User user);
 
-    public BasicResponse updateUserPassword(User user);
+    public BasicResponse<String> updateUserPassword(User user);
 }

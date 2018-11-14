@@ -1,6 +1,6 @@
 package com.lxj.service;
 
-import com.lxj.BasicResponse;
+import com.lxj.response.BasicResponse;
 
 public interface NewsService {
 

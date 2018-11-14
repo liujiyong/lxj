@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lxj.BasicResponse;
 import com.lxj.mapper.NewsMapper;
 import com.lxj.model.News;
+import com.lxj.response.BasicResponse;
 import com.lxj.service.NewsService;
 
 @Service("newsService")

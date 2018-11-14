@@ -4,8 +4,8 @@ import org.apache.shiro.ShiroException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.lxj.BasicResponse;
 import com.lxj.exception.UnauthorizedException;
+import com.lxj.response.BasicResponse;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,18 +1,17 @@
 package com.lxj.util;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-
 public class JWTUtil {
-
-    // 过期时间5分钟
-    private static final long EXPIRE_TIME = 5*60*1000;
+    // 过期时间120分钟
+    private static final long EXPIRE_TIME = 120*60*1000;
 
     /**
      * 校验token是否正确
@@ -26,7 +25,7 @@ public class JWTUtil {
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("username", username)
                     .build();
-            DecodedJWT jwt = verifier.verify(token);
+            verifier.verify(token);
             return true;
         } catch (Exception exception) {
             return false;

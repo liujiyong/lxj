@@ -5,11 +5,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lxj.BasicResponse;
+import com.lxj.response.BasicResponse;
 import com.lxj.service.NewsService;
 
 @RestController
-@RequestMapping(value = "/news")
+@RequestMapping(value = "api/v2/news")
 public class NewsController {
 
     @Autowired

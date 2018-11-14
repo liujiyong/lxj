@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lxj.BasicResponse;
 import com.lxj.exception.UnauthorizedException;
 import com.lxj.mapper.UserMapper;
 import com.lxj.model.User;
+import com.lxj.response.BasicResponse;
 import com.lxj.util.JWTUtil;
 
 @RestController

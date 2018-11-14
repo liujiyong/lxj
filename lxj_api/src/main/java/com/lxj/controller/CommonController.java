@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.lxj.BasicResponse;
 import com.lxj.LxjPropertyService;
 import com.lxj.constants.CommonConstants;
+import com.lxj.response.BasicResponse;
 import com.lxj.util.IDGenerator;
 
 @RestController

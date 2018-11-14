@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate - MySQL GUI v8.21 
-MySQL - 5.6.9-rc-log : Database - lxj
+MySQL - 5.6.36 : Database - lxj
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.6.9-rc-log : Database - lxj
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`lxj` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`lxj` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `lxj`;
 
@@ -45,7 +45,7 @@ CREATE TABLE `t_permission` (
 
 /*Data for the table `t_permission` */
 
-insert  into `t_permission`(`id`,`permission_name`) values ('delete','删除权限'),('edit','修改权限'),('view','查看权限');
+insert  into `t_permission`(`id`,`permission_name`) values ('add','添加权限'),('delete','删除权限'),('edit','修改权限'),('view','查看权限');
 
 /*Table structure for table `t_resources_auth` */
 
@@ -54,6 +54,7 @@ DROP TABLE IF EXISTS `t_resources_auth`;
 CREATE TABLE `t_resources_auth` (
   `id` varchar(45) NOT NULL COMMENT '资源权限ID',
   `resource` varchar(128) NOT NULL COMMENT '资源URI',
+  `resource_description` varchar(256) DEFAULT NULL COMMENT '资源描述',
   `authorized` varchar(128) NOT NULL COMMENT '授权字符串',
   `create_user` varchar(45) NOT NULL COMMENT '创建者',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -64,7 +65,7 @@ CREATE TABLE `t_resources_auth` (
 
 /*Data for the table `t_resources_auth` */
 
-insert  into `t_resources_auth`(`id`,`resource`,`authorized`,`create_user`,`create_time`,`update_user`,`update_time`) values ('1','/news','jwt','admin','2018-11-13 00:00:00','admin','2018-11-13 00:00:00'),('2','/sample/require_auth','jwt','admin','2018-11-13 00:00:00','admin','2018-11-13 00:00:00');
+insert  into `t_resources_auth`(`id`,`resource`,`resource_description`,`authorized`,`create_user`,`create_time`,`update_user`,`update_time`) values ('2','/api/v1/user/**','用户管理相关接口','jwt,roles[admin]','admin','2018-11-13 00:00:00','admin','2018-11-13 00:00:00'),('1','/authentication/**','登录登出接口','anon','admin','2018-11-13 00:00:00','admin','2018-11-13 00:00:00');
 
 /*Table structure for table `t_role` */
 
@@ -79,7 +80,7 @@ CREATE TABLE `t_role` (
 
 /*Data for the table `t_role` */
 
-insert  into `t_role`(`id`,`role_name`,`permission_id`) values ('manager','管理员','view,edit,delete'),('user','用户','view');
+insert  into `t_role`(`id`,`role_name`,`permission_id`) values ('admin','管理员','view,edit,delete,add'),('user','用户','view');
 
 /*Table structure for table `t_user` */
 
@@ -102,7 +103,7 @@ CREATE TABLE `t_user` (
 
 /*Data for the table `t_user` */
 
-insert  into `t_user`(`id`,`user_id`,`password`,`nick_name`,`email`,`role_id`,`create_time`,`last_login_time`,`status`) values ('1','admin','admin','大波斯',NULL,'manager',NULL,NULL,1),('2','user','123456','小虾米',NULL,'user',NULL,NULL,1);
+insert  into `t_user`(`id`,`user_id`,`password`,`nick_name`,`email`,`role_id`,`create_time`,`last_login_time`,`status`) values ('1','admin','admin','大波斯',NULL,'admin',NULL,NULL,1),('2','user','123456','小虾米',NULL,'user',NULL,NULL,1);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

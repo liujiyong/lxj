@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lxj.mapper.UserMapper">
+    <resultMap id="UserResultMap" type="com.lxj.model.User">
+        <id column="id" property="id" javaType="String" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" javaType="String" jdbcType="VARCHAR" />
+        <result column="password" property="password" javaType="String" jdbcType="VARCHAR" />
+        <result column="nick_name" property="nickName" javaType="String" jdbcType="VARCHAR" />
+        <result column="email" property="email" javaType="String" jdbcType="VARCHAR" />
+        <result column="role_id" property="roleId" javaType="String" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="last_login_time" property="lastLoginTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" javaType="int" jdbcType="INTEGER" />
+        <association property="role" javaType="com.lxj.model.Role">
+             <result property="id" column="roleId" javaType="String" jdbcType="VARCHAR"/>
+             <result column="role_name" property="roleName" javaType="String" jdbcType="VARCHAR" />
+             <result column="permission_id" property="permissionId" javaType="String" jdbcType="VARCHAR" />
+        </association>
+    </resultMap>
+    <sql id="User_Column_List">
+        id, user_id, password, nick_name, email, role_id, create_time, last_login_time, status
+    </sql>
+    <select id="getUserByUserId" resultMap="UserResultMap" parameterType="java.lang.String">
+        select
+            *
+        from
+            t_user u, t_role r
+        where
+            u.role_id = r.id and
+            u.user_id = #{userId,jdbcType=VARCHAR}
+    </select>
+    <select id="getAllUsers" resultMap="UserResultMap">
+        select
+            u.id, u.user_id, u.nick_name, u.email, u.role_id, u.create_time, u.last_login_time, u.status, r.id roleId, r.role_name, r.permission_id
+        from
+            t_user u, t_role r
+        where
+            u.role_id = r.id
+    </select>
+
+    <select id="userIsExist" resultMap="UserResultMap" parameterType="java.lang.String">
+        select
+            *
+        from
+            t_user u
+        where
+            u.user_id = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="addUser" parameterType="com.lxj.model.User">
+        insert into t_user (id, user_id, password, nick_name, email, role_id, create_time)
+        values (
+        #{id,jdbcType=VARCHAR},
+        #{userId,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},
+        #{nickName,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR},
+        #{roleId,jdbcType=VARCHAR},
+        #{createTime,jdbcType=DATE}
+        )
+    </insert>
+    
+    <delete id="deleteUserByUserId"
+        parameterType="java.lang.String">
+        delete from t_user
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="updateUserById" parameterType="com.lxj.model.User">
+        update t_user
+        set
+        nick_name = #{nickName,jdbcType=VARCHAR},
+        email = #{email,jdbcType=VARCHAR},
+        role_id = #{roleId,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER}
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateUserPassword" parameterType="com.lxj.model.User">
+        update t_user
+        set
+        password = #{password,jdbcType=VARCHAR}
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+</mapper>

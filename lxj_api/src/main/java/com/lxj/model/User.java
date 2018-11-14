@@ -7,6 +7,8 @@ public class User {
 
     private String userId;
 
+    private String oldPassword;
+
     private String password;
 
     private String nickName;
@@ -37,6 +39,14 @@ public class User {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
     }
 
     public String getPassword() {

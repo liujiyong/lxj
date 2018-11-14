@@ -1,6 +1,6 @@
-package com.lxj;
+package com.lxj.response;
 
-public class BasicResponse {
+public class BasicResponse<T> {
 
     // http 状态码
     private int code;
@@ -9,9 +9,9 @@ public class BasicResponse {
     private String msg;
 
     // 返回的数据
-    private Object data;
+    private T data;
 
-    public BasicResponse(int code, String msg, Object data) {
+    public BasicResponse(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -37,7 +37,7 @@ public class BasicResponse {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

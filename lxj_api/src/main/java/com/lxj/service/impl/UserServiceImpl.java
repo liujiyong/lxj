@@ -3,22 +3,21 @@ package com.lxj.service.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.lxj.BasicResponse;
 import com.lxj.LxjPropertyService;
-import com.lxj.exception.UnauthorizedException;
+import com.lxj.constants.Messages;
 import com.lxj.mapper.UserMapper;
 import com.lxj.model.User;
+import com.lxj.response.BasicResponse;
 import com.lxj.service.UserService;
 import com.lxj.util.IDGenerator;
 import com.lxj.util.JWTUtil;
-import com.lxj.util.SafeHashGenerator;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -28,95 +27,113 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Autowired
-    LxjPropertyService kuaiyiPropertyService;
+    private LxjPropertyService lxjProperty;
 
-    public BasicResponse validateUser(String userId, String password) {
+    @Transactional
+    public BasicResponse<String> validateAppUser(String userId, String password) {
         User user = userMapper.getUserByUserId(userId);
-        if (user != null && user.getPassword().equals(password)) {
-            return new BasicResponse(200, "Login success", JWTUtil.sign(userId, password));
+        if (user != null) {
+            userMapper.updateUserPassword(user);
+            return new BasicResponse<String>(200, "Login success", JWTUtil.sign(userId, password));
         } else {
-            LOGGER.info("userid or password is incorrect.");
-            throw new UnauthorizedException();
+            LOGGER.info("用户手机号不存在。");
+            return new BasicResponse<String>(200, "Login fail", String.format(lxjProperty.getValue(Messages.ERR10003), userId));
         }
     }
 
-    public BasicResponse getUserList() {
+    public BasicResponse<List<User>> getUserList() {
         List<User> user = userMapper.getAllUsers();
-        return new BasicResponse(200, "success", user);
+        return new BasicResponse<List<User>>(200, "success", user);
     }
 
-    @Override
-    public BasicResponse deleteUserById(String id) {
-        int count = userMapper.deleteUserById(id);
+    @Transactional
+    public BasicResponse<String> deleteUserByUserId(String userId) {
+        if (StringUtils.isEmpty(userId)) {
+            LOGGER.info("用户名不能为空。");
+            return new BasicResponse<String>(200, "delete fail", String.format(lxjProperty.getValue(Messages.ERR10001), "用户名"));
+        }
+        
+        int count = userMapper.deleteUserByUserId(userId);
         if (count > 0) {
-            return new BasicResponse(200, "success", "The user id deleted! ");
+            return new BasicResponse<String>(200, "delete success", lxjProperty.getValue(Messages.MSG99999));
         } else {
-            return new BasicResponse(200, "fail", null);
+            LOGGER.info("用户已被删除。");
+            return new BasicResponse<String>(200, "delete fail", lxjProperty.getValue(Messages.ERR99999));
         }
     }
 
-    @Override
-    public BasicResponse addUser(User user) {
-
+    @Transactional
+    public BasicResponse<String> addUser(User user) {
         if (StringUtils.isEmpty(user.getUserId())) {
-            return new BasicResponse(200, "fail", "The user id can't null!");
+            LOGGER.info("用户名不能为空。");
+            return new BasicResponse<String>(200, "fail", String.format(lxjProperty.getValue(Messages.ERR10001), "用户名"));
         }
 
         User oldUser = userMapper.userIsExist(user.getUserId());
         if (oldUser != null) {
-            return new BasicResponse(200, "fail", "The user id already exists!");
+            LOGGER.info("用户名已经存在。");
+            return new BasicResponse<String>(200, "fail", String.format(lxjProperty.getValue(Messages.ERR10002), user.getUserId()));
         }
         user.setId(IDGenerator.generate());
-        String initialPassword = RandomStringUtils.randomAlphanumeric(10);
-        String hashedInitialPassword = SafeHashGenerator.getStretchedPassword(initialPassword, user.getUserId());
-        user.setPassword(hashedInitialPassword);
+//        String hashedInitialPassword = SafeHashGenerator.getStretchedPassword(user.getPassword(), user.getUserId());
+//        user.setPassword(hashedInitialPassword);
+        user.setPassword(user.getPassword());
         user.setCreateTime(new Date());
         int count = userMapper.addUser(user);
         if (count > 0) {
-            return new BasicResponse(200, "success", user);
+            return new BasicResponse<String>(200, "success", lxjProperty.getValue(Messages.MSG99999));
         } else {
-            return new BasicResponse(200, "fail", user);
+            LOGGER.info("添加用户失败。");
+            return new BasicResponse<String>(200, "fail", lxjProperty.getValue(Messages.ERR99999));
         }
-
     }
 
-    @Override
-    public BasicResponse updateUser(User user) {
+    @Transactional
+    public BasicResponse<String> updateUser(User user) {
         if (StringUtils.isEmpty(user.getUserId())) {
-            return new BasicResponse(200, "fail", kuaiyiPropertyService.getValue("201"));
+            LOGGER.info("用户名不能为空。");
+            return new BasicResponse<String>(200, "update fail", String.format(lxjProperty.getValue(Messages.ERR10001), "用户名"));
         }
 
         User oldUser = userMapper.userIsExist(user.getUserId());
         if (oldUser == null) {
-            return new BasicResponse(200, "fail", "The user id is deleted!");
+            LOGGER.info("用户名不存在。");
+            return new BasicResponse<String>(200, "update fail", String.format(lxjProperty.getValue(Messages.ERR10004), user.getUserId()));
         }
 
         int count = userMapper.updateUserById(user);
         if (count > 0) {
-            return new BasicResponse(200, "success", user);
+            return new BasicResponse<String>(200, "update success", lxjProperty.getValue(Messages.MSG99999));
         } else {
-            return new BasicResponse(200, "fail", user);
+            LOGGER.info("更新用户失败。");
+            return new BasicResponse<String>(200, "update fail", lxjProperty.getValue(Messages.ERR99999));
         }
     }
 
-    @Override
-    public BasicResponse updateUserPassword(User user) {
+    @Transactional
+    public BasicResponse<String> updateUserPassword(User user) {
         if (StringUtils.isEmpty(user.getUserId())) {
-            return new BasicResponse(200, "fail", "The user id can't null!");
+            LOGGER.info("用户名不能为空。");
+            return new BasicResponse<String>(200, "password change fail", String.format(lxjProperty.getValue(Messages.ERR10001), "用户名"));
         }
 
         User oldUser = userMapper.userIsExist(user.getUserId());
         if (oldUser == null) {
-            return new BasicResponse(200, "fail", "The user id is deleted!");
+            LOGGER.info("用户名不存在。");
+            return new BasicResponse<String>(200, "password change fail", String.format(lxjProperty.getValue(Messages.ERR10004), user.getUserId()));
         }
-        String initialPassword = RandomStringUtils.randomAlphanumeric(10);
-        String hashedInitialPassword = SafeHashGenerator.getStretchedPassword(initialPassword, user.getUserId());
-        user.setPassword(hashedInitialPassword);
+        if (!oldUser.getPassword().equals(user.getOldPassword())) {
+            LOGGER.info("旧密码不正确。");
+            return new BasicResponse<String>(200, "password change fail", lxjProperty.getValue(Messages.ERR10005));
+        }
+//        String hashedInitialPassword = SafeHashGenerator.getStretchedPassword(initialPassword, user.getUserId());
+//        user.setPassword(hashedInitialPassword);
+        oldUser.setPassword(user.getPassword());
         int count = userMapper.updateUserPassword(user);
         if (count > 0) {
-            return new BasicResponse(200, "success", user);
+            return new BasicResponse<String>(200, "password change success", lxjProperty.getValue(Messages.MSG99999));
         } else {
-            return new BasicResponse(200, "fail", user);
+            return new BasicResponse<String>(200, "password change fail", lxjProperty.getValue(Messages.ERR99999));
         }
     }
 }

@@ -12,7 +12,7 @@ public interface UserMapper {
 
     public List<User> getAllUsers();
 
-    public int deleteUserById(String userId);
+    public int deleteUserByUserId(String userId);
 
     public int addUser(User user);
 
