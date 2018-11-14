@@ -29,7 +29,10 @@
     <select id="getAllResourcesAuth" resultMap="authMap">
         select
             resource, authorized
-        from t_resources_auth
+        from 
+            t_resources_auth
+        order by
+            id ASC
     </select>
 
 </mapper>

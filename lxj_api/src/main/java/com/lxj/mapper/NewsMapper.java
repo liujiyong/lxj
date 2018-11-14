@@ -8,4 +8,5 @@ public interface NewsMapper {
 
     public List<News> getAllNews();
 
+    public int createNews(News news);
 }

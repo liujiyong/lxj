@@ -1,14 +1,17 @@
 package com.lxj.service;
 
+import java.util.List;
+
+import com.lxj.model.News;
 import com.lxj.response.BasicResponse;
 
 public interface NewsService {
 
-    public BasicResponse getAllNews();
+    public BasicResponse<List<News>> getAllNews();
 
-    public BasicResponse createNews();
+    public BasicResponse<String> createNews(News news, String userId);
 
-    public BasicResponse updateNews();
+    public BasicResponse<String> updateNews(News news);
 
-    public BasicResponse deleteNews();
+    public BasicResponse<String> deleteNews(String newsId);
 }

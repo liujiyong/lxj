@@ -70,6 +70,6 @@ public class MyRealm extends AuthorizingRealm {
             throw new AuthenticationException("Username or password error");
         }
 
-        return new SimpleAuthenticationInfo(token, token, "my_realm");
+        return new SimpleAuthenticationInfo(userId, token, "my_realm");
     }
 }

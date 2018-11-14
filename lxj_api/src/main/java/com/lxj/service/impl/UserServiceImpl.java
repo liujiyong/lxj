@@ -66,13 +66,13 @@ public class UserServiceImpl implements UserService {
     public BasicResponse<String> addUser(User user) {
         if (StringUtils.isEmpty(user.getUserId())) {
             LOGGER.info("用户名不能为空。");
-            return new BasicResponse<String>(200, "fail", String.format(lxjProperty.getValue(Messages.ERR10001), "用户名"));
+            return new BasicResponse<String>(200, "add fail", String.format(lxjProperty.getValue(Messages.ERR10001), "用户名"));
         }
 
         User oldUser = userMapper.userIsExist(user.getUserId());
         if (oldUser != null) {
             LOGGER.info("用户名已经存在。");
-            return new BasicResponse<String>(200, "fail", String.format(lxjProperty.getValue(Messages.ERR10002), user.getUserId()));
+            return new BasicResponse<String>(200, "add fail", String.format(lxjProperty.getValue(Messages.ERR10002), user.getUserId()));
         }
         user.setId(IDGenerator.generate());
 //        String hashedInitialPassword = SafeHashGenerator.getStretchedPassword(user.getPassword(), user.getUserId());
@@ -81,10 +81,10 @@ public class UserServiceImpl implements UserService {
         user.setCreateTime(new Date());
         int count = userMapper.addUser(user);
         if (count > 0) {
-            return new BasicResponse<String>(200, "success", lxjProperty.getValue(Messages.MSG99999));
+            return new BasicResponse<String>(200, "add success", lxjProperty.getValue(Messages.MSG99999));
         } else {
             LOGGER.info("添加用户失败。");
-            return new BasicResponse<String>(200, "fail", lxjProperty.getValue(Messages.ERR99999));
+            return new BasicResponse<String>(200, "add fail", lxjProperty.getValue(Messages.ERR99999));
         }
     }
 

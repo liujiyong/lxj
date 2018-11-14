@@ -27,4 +27,16 @@
         from t_news
     </select>
 
+    <insert id="createNews" parameterType="com.lxj.model.News">
+        insert into t_news (id, title, content, create_user, create_time, update_user, update_time)
+        values (
+        #{id,jdbcType=VARCHAR},
+        #{title,jdbcType=VARCHAR},
+        #{content,jdbcType=VARCHAR},
+        #{createUser,jdbcType=VARCHAR},
+        #{createTime,jdbcType=DATE},
+        #{updateUser,jdbcType=VARCHAR},
+        #{updateTime,jdbcType=DATE}
+        )
+    </insert>
 </mapper>
